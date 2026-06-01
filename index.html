@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PCms Quality Tracker</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+
+<div id="app">
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <div class="logo">📋 PCms Quality Tracker</div>
+      <nav>
+        <button class="nav-btn active" data-tab="upload">📂 Upload</button>
+        <button class="nav-btn" data-tab="overview">📊 Overview</button>
+        <button class="nav-btn" data-tab="ko">🚨 KO Breaches</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- UPLOAD TAB -->
+  <section id="tab-upload" class="tab active">
+    <div class="card upload-card">
+      <h2>Upload PCms Excel File</h2>
+      <p class="sub">Upload the Excel file with the horizontal Summary sheet. The app will automatically parse it into the breach tracker.</p>
+      <label class="drop-zone" id="dropZone">
+        <div class="drop-icon">📁</div>
+        <div class="drop-text">Drop your .xlsx file here<br/><span>or click to browse</span></div>
+        <input type="file" id="fileInput" accept=".xlsx,.xls" hidden />
+      </label>
+      <div id="uploadStatus" class="upload-status hidden"></div>
+      <div id="uploadError" class="upload-error hidden"></div>
+    </div>
+  </section>
+
+  <!-- OVERVIEW TAB -->
+  <section id="tab-overview" class="tab hidden">
+    <div class="toolbar">
+      <div class="filter-group">
+        <label>Month</label>
+        <select id="filterMonth"><option value="">All Months</option></select>
+      </div>
+      <div class="filter-group">
+        <label>Week</label>
+        <select id="filterWeek"><option value="">All Weeks</option></select>
+      </div>
+      <div class="filter-group">
+        <label>Agent</label>
+        <select id="filterAgentOverview"><option value="">All Agents</option></select>
+      </div>
+    </div>
+
+    <div class="stats-row" id="statsRow"></div>
+
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3>KO Breaches by Month</h3>
+        <canvas id="chartByMonth"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Top KO Agents (filtered view)</h3>
+        <canvas id="chartByAgent"></canvas>
+      </div>
+      <div class="chart-card wide">
+        <h3>KO Breaches by Category</h3>
+        <canvas id="chartByCategory"></canvas>
+      </div>
+      <div class="chart-card wide">
+        <h3>Weekly Trend</h3>
+        <canvas id="chartWeekly"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- KO TAB -->
+  <section id="tab-ko" class="tab hidden">
+    <div class="toolbar">
+      <div class="filter-group">
+        <label>Month</label>
+        <select id="koFilterMonth"><option value="">All Months</option></select>
+      </div>
+      <div class="filter-group">
+        <label>Week</label>
+        <select id="koFilterWeek"><option value="">All Weeks</option></select>
+      </div>
+      <div class="filter-group">
+        <label>Agent</label>
+        <select id="koFilterAgent"><option value="">All Agents</option></select>
+      </div>
+      <div class="filter-group">
+        <label>Category</label>
+        <select id="koFilterCategory"><option value="">All Categories</option></select>
+      </div>
+      <div class="filter-group">
+        <label>Search INC</label>
+        <input type="text" id="koSearch" placeholder="INC000..." />
+      </div>
+    </div>
+
+    <div class="export-bar">
+      <span id="koCount" class="ko-count">0 breaches</span>
+      <button class="btn-export" id="exportCSV">⬇ Export CSV</button>
+      <button class="btn-export" id="exportExcel">⬇ Export Excel</button>
+    </div>
+
+    <div class="table-wrap">
+      <table id="koTable">
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Week</th>
+            <th>Ticket ID</th>
+            <th>Category</th>
+            <th>KO Description</th>
+            <th>Agent</th>
+            <th>Multi-breach flag</th>
+          </tr>
+        </thead>
+        <tbody id="koTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
